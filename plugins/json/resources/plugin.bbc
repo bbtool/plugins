@@ -1,0 +1,15 @@
+{
+  "pluginName": "json",
+  "version": "1.0.0",
+  "author": "BBTools",
+  "homepage": "https://bbt.dei2.com",
+  "logo": "logo.png",
+  "main": "index.html",
+  "description": "增强型json格式化",
+  "features": {
+    "searchable": {
+      "cmds": ["json"]
+    },
+    "filterable": true
+  }
+}
