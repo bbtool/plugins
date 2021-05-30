@@ -57,7 +57,7 @@ export default {
       }
     },
     jsonData () {
-      return JSON.parse(this.jsonStr)
+      return json5.parse(this.jsonStr)
     }
   },
   mounted () {
@@ -96,8 +96,8 @@ export default {
             this.mainEditor.setValue(this.jsonStr)
           }
         } else {
-          // this.jsonStr = JSON.stringify(this.jsonStr, null, 2)
-          // this.mainEditor.setValue(this.jsonStr)
+          this.jsonStr = JSON.stringify(json5.parse(this.jsonStr), null, 2)
+          this.mainEditor.setValue(this.jsonStr)
         }
       })
     },
