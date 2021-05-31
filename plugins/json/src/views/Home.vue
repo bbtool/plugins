@@ -60,15 +60,17 @@ import { Tooltip } from 'view-design'
 var Parser = require("fast-xml-parser").j2xParser;
 //default options need not to set
 var defaultOptions = {
-  attributeNamePrefix: "@_",
+  attributeNamePrefix: "",
   attrNodeName: "@", //default is false
   textNodeName: "#text",
   ignoreAttributes: true,
   cdataTagName: "__cdata", //default is false
   cdataPositionChar: "\\c",
-  format: true,
   indentBy: "  ",
+  format: true,
+  rootElement: '<root>',
   supressEmptyNode: true,
+  // tagValueProcessor: a => { console.log('>>>', a); return a }
   // tagValueProcessor: a => he.encode(a, { useNamedReferences: true }),// default is a=>a
   // attrValueProcessor: a => he.encode(a, { isAttributeValue: isAttribute, useNamedReferences: true })// default is a=>a
 };
@@ -104,6 +106,7 @@ export default {
   mounted () {
     this.$nextTick(() => {
       this.initMainEditor()
+      this.initSubEditor()
     })
   },
   methods: {
@@ -111,6 +114,7 @@ export default {
       if (this.currentAction == 'compress') {
         this.currentAction = ''
       } else {
+        monaco.editor.setModelLanguage(this.subEditor.getModel(), 'json')
         this.currentAction = 'compress'
         this.subJsonStr = JSON.stringify(this.jsonData)
         this.initSubEditor()
@@ -120,8 +124,10 @@ export default {
       if (this.currentAction == 'xml') {
         this.currentAction = ''
       } else {
+        monaco.editor.setModelLanguage(this.subEditor.getModel(), 'xml')
         this.currentAction = 'xml'
-        this.subJsonStr = parser.parse(this.jsonData)
+        // this.subJsonStr = parser.parse(this.jsonData)
+        this.subJsonStr = `<?xml version="1.0" encoding="UTF-8" ?>\n<root>\n${parser.parse(this.jsonData)}</root>`
         this.initSubEditor()
       }
     },
@@ -151,10 +157,13 @@ export default {
           this.subJsonStr = ''
           this.initSubEditor()
         } else if (this.currentAction == 'compress') {
+          monaco.editor.setModelLanguage(this.subEditor.getModel(), 'json')
           this.subJsonStr = JSON.stringify(this.jsonData)
           this.initSubEditor()
         } else if (this.currentAction == 'xml') {
-          this.subJsonStr = parser.parse(this.jsonData)
+          monaco.editor.setModelLanguage(this.subEditor.getModel(), 'xml')
+          // this.subJsonStr = parser.parse(this.jsonData)
+          this.subJsonStr = `<?xml version="1.0" encoding="UTF-8" ?>\n<root>\n${parser.parse(this.jsonData)}</root>`
           this.initSubEditor()
         }
 
@@ -195,8 +204,8 @@ export default {
           overviewRulerBorder: false,
           tabSize: 2,
           contextmenu: false,
-          wordWrap: 'on'
-          // formatOnPaste: true
+          wordWrap: 'on',
+          formatOnPaste: true
         })
       })
     },
@@ -316,7 +325,8 @@ export default {
       }
     }
     &_append {
-      width: 108px;
+      width: 72px;
+      // width: 108px;
       height: 100%;
       border-left: 1px solid #eee;
       box-sizing: border-box;
