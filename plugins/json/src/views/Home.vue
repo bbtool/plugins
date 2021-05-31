@@ -10,7 +10,7 @@
       </transition>
       <transition name="fade">
         <div class="main_append"
-             v-if="showMainAppend">
+             :style="{width: showMainAppend ? '50%' : '0%'}">
           <div class="sub_editor"
                ref="subEditorRef"></div>
         </div>
@@ -24,9 +24,31 @@
                @input="changeField"
                placeholder="属性过滤，例如: .field（获取field属性值）">
       </div>
-      <div class="footer_append">
-
-      </div>
+      <transition name="fade">
+        <div class="footer_append"
+             v-if="currentAction != 'field'">
+          <Tooltip content="压缩"
+                   placement="top-end">
+            <div class="footer_append_item"
+                 :class="{'active': currentAction == 'compress'}"
+                 @click="setCompress">
+              <svg>
+                <use xlink:href="#icon-minimize"></use>
+              </svg>
+            </div>
+          </Tooltip>
+          <Tooltip content="转xml"
+                   placement="top-end">
+            <div class="footer_append_item"
+                 :class="{'active': currentAction == 'xml'}"
+                 @click="setXml">
+              <svg>
+                <use xlink:href="#icon-xml"></use>
+              </svg>
+            </div>
+          </Tooltip>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -34,9 +56,27 @@
 <script>
 import * as monaco from 'monaco-editor'
 import json5 from 'json5'
+import { Tooltip } from 'view-design'
+var Parser = require("fast-xml-parser").j2xParser;
+//default options need not to set
+var defaultOptions = {
+  attributeNamePrefix: "@_",
+  attrNodeName: "@", //default is false
+  textNodeName: "#text",
+  ignoreAttributes: true,
+  cdataTagName: "__cdata", //default is false
+  cdataPositionChar: "\\c",
+  format: true,
+  indentBy: "  ",
+  supressEmptyNode: false,
+  // tagValueProcessor: a => he.encode(a, { useNamedReferences: true }),// default is a=>a
+  // attrValueProcessor: a => he.encode(a, { isAttributeValue: isAttribute, useNamedReferences: true })// default is a=>a
+};
+var parser = new Parser(defaultOptions);
 export default {
   name: 'Home',
   components: {
+    Tooltip
   },
   data () {
     return {
@@ -44,13 +84,14 @@ export default {
       subEditor: null,
       field: '',
       jsonStr: '',
-      subJsonStr: ''
+      subJsonStr: '',
+      currentAction: '', // field: 字段过滤; compress: 压缩; xml: 转xml
       // jsonData: null
     }
   },
   computed: {
     showMainAppend () {
-      if (this.field.trim() != '') {
+      if (this.currentAction != '') {
         return true
       } else {
         return false
@@ -66,6 +107,24 @@ export default {
     })
   },
   methods: {
+    setCompress () {
+      if (this.currentAction == 'compress') {
+        this.currentAction = ''
+      } else {
+        this.currentAction = 'compress'
+        this.subJsonStr = JSON.stringify(this.jsonData)
+        this.initSubEditor()
+      }
+    },
+    setXml () {
+      if (this.currentAction == 'xml') {
+        this.currentAction = ''
+      } else {
+        this.currentAction = 'xml'
+        this.subJsonStr = parser.parse(this.jsonData)
+        this.initSubEditor()
+      }
+    },
     initMainEditor () {
       this.mainEditor = monaco.editor.create(this.$refs.mainEditorRef, {
         language: 'json',
@@ -102,31 +161,38 @@ export default {
       })
     },
     initSubEditor () {
-      if (this.subEditor) {
-        this.subEditor.setValue(this.subJsonStr)
-        return
-      }
-      this.subEditor = monaco.editor.create(this.$refs.subEditorRef, {
-        language: 'json',
-        value: this.subJsonStr || '',
-        automaticLayout: true,
-        minimap: {
-          enabled: false
-        },
-        scrollbar: {
-          vertical: 'auto',
-          verticalSliderSize: 5,
-          verticalScrollbarSize: 5
-        },
-        lineNumbers: false,
-        readOnly: true,
-        overviewRulerBorder: false,
-        tabSize: 2,
-        contextmenu: false,
-        // formatOnPaste: true
+      this.$nextTick(() => {
+        if (this.subEditor) {
+          this.subEditor.setValue(this.subJsonStr)
+          return
+        }
+        this.subEditor = monaco.editor.create(this.$refs.subEditorRef, {
+          language: 'json',
+          value: this.subJsonStr || '',
+          automaticLayout: true,
+          minimap: {
+            enabled: false
+          },
+          scrollbar: {
+            vertical: 'auto',
+            verticalSliderSize: 5,
+            verticalScrollbarSize: 5
+          },
+          lineNumbers: false,
+          readOnly: true,
+          overviewRulerBorder: false,
+          tabSize: 2,
+          contextmenu: false,
+          // formatOnPaste: true
+        })
       })
     },
     changeField () {
+      if (this.field) {
+        this.currentAction = 'field'
+      } else {
+        this.currentAction = ''
+      }
       let r = eval('this.jsonData' + this.field)
       let _type = Object.prototype.toString.call(r)
       if (_type == '[object Array]' || _type == '[object Object]') {
@@ -178,7 +244,7 @@ export default {
       position: absolute;
       left: 62px;
       top: 20px;
-      width: 300px;
+      width: 400px;
       height: 24px;
       font-size: 14px;
       color: #aaa;
@@ -241,6 +307,45 @@ export default {
       height: 100%;
       border-left: 1px solid #eee;
       box-sizing: border-box;
+      display: flex;
+      flex-direction: row;
+      align-content: center;
+      > div {
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+      }
+      &_item {
+        width: 36px;
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        svg {
+          width: 18px;
+          height: 18px;
+          fill: #aaa;
+        }
+        &:hover {
+          svg {
+            fill: #666;
+          }
+        }
+        &.active {
+          svg {
+            fill: #007392;
+          }
+          &:hover {
+            svg {
+              fill: #007392;
+            }
+          }
+        }
+      }
     }
   }
 }

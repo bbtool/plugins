@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <Home></Home>
+    <Svgs></Svgs>
   </div>
 </template>
 
@@ -17,12 +18,16 @@ body {
 #app {
   height: 100%;
 }
+.ivu-tooltip-rel {
+  height: 100%;
+}
 </style>
 <script>
 export default {
   name: 'App',
   components: {
-    Home: () => import('./views/Home')
+    Home: () => import('./views/Home'),
+    Svgs: () => import('./Svgs')
   }
 }
 </script>
