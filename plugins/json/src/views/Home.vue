@@ -37,7 +37,7 @@
               </svg>
             </div>
           </Tooltip>
-          <Tooltip content="转xml"
+          <Tooltip content="JSON 转 XML"
                    placement="top-end">
             <div class="footer_append_item"
                  :class="{'active': currentAction == 'xml'}"
@@ -68,7 +68,7 @@ var defaultOptions = {
   cdataPositionChar: "\\c",
   format: true,
   indentBy: "  ",
-  supressEmptyNode: false,
+  supressEmptyNode: true,
   // tagValueProcessor: a => he.encode(a, { useNamedReferences: true }),// default is a=>a
   // attrValueProcessor: a => he.encode(a, { isAttributeValue: isAttribute, useNamedReferences: true })// default is a=>a
 };
@@ -146,6 +146,18 @@ export default {
 
       this.mainEditor.onDidChangeModelContent(() => {
         this.jsonStr = this.mainEditor.getValue()
+        if (!this.jsonStr) {
+          this.currentAction = ''
+          this.subJsonStr = ''
+          this.initSubEditor()
+        } else if (this.currentAction == 'compress') {
+          this.subJsonStr = JSON.stringify(this.jsonData)
+          this.initSubEditor()
+        } else if (this.currentAction == 'xml') {
+          this.subJsonStr = parser.parse(this.jsonData)
+          this.initSubEditor()
+        }
+
       })
 
       this.mainEditor.onDidPaste((e) => {
@@ -183,6 +195,7 @@ export default {
           overviewRulerBorder: false,
           tabSize: 2,
           contextmenu: false,
+          wordWrap: 'on'
           // formatOnPaste: true
         })
       })
