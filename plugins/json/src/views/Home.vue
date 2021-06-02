@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import * as monaco from 'monaco-editor'
+import { editor } from 'monaco-editor'
 import json5 from 'json5'
 import { Tooltip } from 'view-design'
 var Parser = require("fast-xml-parser").j2xParser;
@@ -114,7 +114,7 @@ export default {
       if (this.currentAction == 'compress') {
         this.currentAction = ''
       } else {
-        monaco.editor.setModelLanguage(this.subEditor.getModel(), 'json')
+        editor.setModelLanguage(this.subEditor.getModel(), 'json')
         this.currentAction = 'compress'
         this.subJsonStr = JSON.stringify(this.jsonData)
         this.initSubEditor()
@@ -124,7 +124,7 @@ export default {
       if (this.currentAction == 'xml') {
         this.currentAction = ''
       } else {
-        monaco.editor.setModelLanguage(this.subEditor.getModel(), 'xml')
+        editor.setModelLanguage(this.subEditor.getModel(), 'xml')
         this.currentAction = 'xml'
         // this.subJsonStr = parser.parse(this.jsonData)
         this.subJsonStr = `<?xml version="1.0" encoding="UTF-8" ?>\n<root>\n${parser.parse(this.jsonData)}</root>`
@@ -132,7 +132,7 @@ export default {
       }
     },
     initMainEditor () {
-      this.mainEditor = monaco.editor.create(this.$refs.mainEditorRef, {
+      this.mainEditor = editor.create(this.$refs.mainEditorRef, {
         language: 'json',
         value: '',
         automaticLayout: true,
@@ -157,11 +157,11 @@ export default {
           this.subJsonStr = ''
           this.initSubEditor()
         } else if (this.currentAction == 'compress') {
-          monaco.editor.setModelLanguage(this.subEditor.getModel(), 'json')
+          editor.setModelLanguage(this.subEditor.getModel(), 'json')
           this.subJsonStr = JSON.stringify(this.jsonData)
           this.initSubEditor()
         } else if (this.currentAction == 'xml') {
-          monaco.editor.setModelLanguage(this.subEditor.getModel(), 'xml')
+          editor.setModelLanguage(this.subEditor.getModel(), 'xml')
           // this.subJsonStr = parser.parse(this.jsonData)
           this.subJsonStr = `<?xml version="1.0" encoding="UTF-8" ?>\n<root>\n${parser.parse(this.jsonData)}</root>`
           this.initSubEditor()
@@ -187,7 +187,7 @@ export default {
           this.subEditor.setValue(this.subJsonStr)
           return
         }
-        this.subEditor = monaco.editor.create(this.$refs.subEditorRef, {
+        this.subEditor = editor.create(this.$refs.subEditorRef, {
           language: 'json',
           value: this.subJsonStr || '',
           automaticLayout: true,

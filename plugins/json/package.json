@@ -7,7 +7,6 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "core-js": "^3.6.5",
     "fast-xml-parser": "^3.19.0",
     "json5": "^2.2.0",
     "monaco-editor": "^0.24.0",
