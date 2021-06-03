@@ -27,6 +27,15 @@
       <transition name="fade">
         <div class="footer_append"
              v-if="currentAction != 'field'">
+          <Tooltip :content="'json格式化 ( ' + (isMac ? 'Command + S' : 'Control + S') + ' )'"
+                   placement="top-end">
+            <div class="footer_append_item"
+                 @click="setFormat">
+              <svg>
+                <use xlink:href="#icon-format"></use>
+              </svg>
+            </div>
+          </Tooltip>
           <Tooltip content="压缩"
                    placement="top-end">
             <div class="footer_append_item"
@@ -88,6 +97,8 @@ export default {
       jsonStr: '',
       subJsonStr: '',
       currentAction: '', // field: 字段过滤; compress: 压缩; xml: 转xml
+      isMac: (navigator.platform === 'Mac68K') || (navigator.platform === 'MacPPC') || (navigator.platform === 'Macintosh') || (navigator.platform === 'MacIntel'),
+      parseStatusSuccess: true, // true 正常 false 错误
       // jsonData: null
     }
   },
@@ -100,23 +111,68 @@ export default {
       }
     },
     jsonData () {
-      return json5.parse(this.jsonStr)
+      let outObj
+      try {
+        outObj = json5.parse(this.jsonStr)
+      } catch (err) {
+        outObj = {}
+        this.subJsonStr = '// JSON 格式错误'
+      }
+      return outObj
     }
   },
   mounted () {
     this.$nextTick(() => {
+      bbtools.send('unregister-shortcut', {
+        shortcut: 'Escape'
+      })
+
       this.initMainEditor()
       this.initSubEditor()
+
+      document.querySelector('.home').addEventListener('keydown', this.keyboardEventHandler)
     })
   },
   methods: {
+    keyboardEventHandler (e) {
+      if (this.isMac) {
+        if (e.metaKey && e.keyCode == 83) {
+          // cmd + S
+          this.setFormat()
+        }
+      } else {
+        if (e.ctrlKey && e.keyCode == 83) {
+          // ctrl + S
+          this.setFormat()
+        }
+      }
+    },
+    setFormat () {
+      // this.currentAction = 'format'
+      if (this.jsonStr && this.jsonStr.trim()) {
+        try {
+          json5.parse(this.jsonStr)
+          this.jsonStr = JSON.stringify(json5.parse(this.jsonStr), null, 2)
+          this.mainEditor.setValue(this.jsonStr)
+        } catch (err) {
+        }
+      }
+    },
     setCompress () {
       if (this.currentAction == 'compress') {
         this.currentAction = ''
       } else {
+        if (!this.jsonStr || !this.jsonStr.trim()) return
+
         editor.setModelLanguage(this.subEditor.getModel(), 'json')
         this.currentAction = 'compress'
-        this.subJsonStr = JSON.stringify(this.jsonData)
+        try {
+          json5.parse(this.jsonStr)
+          this.subJsonStr = JSON.stringify(this.jsonData)
+        } catch (err) {
+          this.subJsonStr = '// JSON 格式错误'
+        }
+
         this.initSubEditor()
       }
     },
@@ -124,10 +180,18 @@ export default {
       if (this.currentAction == 'xml') {
         this.currentAction = ''
       } else {
-        editor.setModelLanguage(this.subEditor.getModel(), 'xml')
+        if (!this.jsonStr || !this.jsonStr.trim()) return
+
         this.currentAction = 'xml'
         // this.subJsonStr = parser.parse(this.jsonData)
-        this.subJsonStr = `<?xml version="1.0" encoding="UTF-8" ?>\n<root>\n${parser.parse(this.jsonData)}</root>`
+        try {
+          json5.parse(this.jsonStr)
+          editor.setModelLanguage(this.subEditor.getModel(), 'xml')
+          this.subJsonStr = `<?xml version="1.0" encoding="UTF-8" ?>\n<root>\n${parser.parse(this.jsonData)}</root>`
+        } catch (err) {
+          editor.setModelLanguage(this.subEditor.getModel(), 'json')
+          this.subJsonStr = '// JSON 格式错误'
+        }
         this.initSubEditor()
       }
     },
@@ -139,6 +203,9 @@ export default {
         minimap: {
           enabled: false
         },
+        suggest: {
+          enabled: false
+        },
         scrollbar: {
           vertical: 'auto',
           verticalSliderSize: 5,
@@ -146,8 +213,10 @@ export default {
         },
         overviewRulerBorder: false,
         tabSize: 2,
+        autoIndent: true,
         contextmenu: false,
-        formatOnPaste: true
+        formatOnPaste: true,
+        formatOnType: true
       })
 
       this.mainEditor.onDidChangeModelContent(() => {
@@ -166,7 +235,6 @@ export default {
           this.subJsonStr = `<?xml version="1.0" encoding="UTF-8" ?>\n<root>\n${parser.parse(this.jsonData)}</root>`
           this.initSubEditor()
         }
-
       })
 
       this.mainEditor.onDidPaste((e) => {
@@ -203,6 +271,7 @@ export default {
           readOnly: true,
           overviewRulerBorder: false,
           tabSize: 2,
+          autoIndent: true,
           contextmenu: false,
           wordWrap: 'on',
           formatOnPaste: true
@@ -246,6 +315,7 @@ export default {
 .home {
   width: 100%;
   height: 100%;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -325,8 +395,7 @@ export default {
       }
     }
     &_append {
-      width: 72px;
-      // width: 108px;
+      width: 108px;
       height: 100%;
       border-left: 1px solid #eee;
       box-sizing: border-box;
