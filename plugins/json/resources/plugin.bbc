@@ -1,6 +1,6 @@
 {
   "pluginName": "json",
-  "version": "1.0.4",
+  "version": "1.0.7",
   "author": "BBTools",
   "homepage": "https://bbt.dei2.com",
   "logo": "logo.png",
@@ -8,8 +8,18 @@
   "description": "增强型json格式化，url参数格式化",
   "features": {
     "searchable": {
-      "cmds": ["json","url","url解析"]
+      "cmds": [
+        "json",
+        "url",
+        "url解析"
+      ]
     },
     "filterable": true
-  }
+  },
+  "local": "/Users/liangshan/workspace/dei2/bbtools-official-plugins/plugins/json/dist/plugin.bbc",
+  "debug": {
+    "type": "file",
+    "path": ""
+  },
+  "id": "CuGVtkpIU0"
 }
