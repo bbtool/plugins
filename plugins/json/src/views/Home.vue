@@ -6,7 +6,7 @@
            ref="mainEditorRef"></div>
       <transition name="fade">
         <div class="main_editor_placeholder"
-             v-if="!jsonStr">URL Params、XML、YAML 粘贴自动转为 JSON 11</div>
+             v-if="!jsonStr">URL Params、XML、YAML 粘贴自动转为 JSON 12</div>
       </transition>
       <transition name="fade">
         <div class="main_append"
