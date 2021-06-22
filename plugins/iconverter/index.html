@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Image Converter</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      outline: none;
+      user-select: none;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    #app {
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .side_list {
+      width: 200px;
+      height: 100%;
+      padding: 10px 0;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      overflow-y: auto;
+      border-right: 1px solid #f0f0f0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .item {
+      width: 100%;
+      /* height: 40px; */
+      padding: 10px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .item.active {
+      background-color: #f0f0f0 !important;
+    }
+
+    .item:hover {
+      background-color: #f0f0f0;
+    }
+
+    .item_logo {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .item_logo img {
+      max-width: 36px;
+      max-height: 36px;
+    }
+
+    .item_desc {
+      flex: 1;
+      line-height: 36px;
+      padding-left: 10px;
+      font-size: 14px;
+    }
+
+    .content {
+      position: relative;
+      flex: 1;
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      background-color: #f0f0f0;
+    }
+
+    .operation_panel {
+      position: absolute;
+      width: 100%;
+      height: 32px;
+      left: 0;
+      top: 0;
+      background-color: red;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      transform: translate3d(0, -20px, 0);
+      transition: all .2s ease-in-out;
+    }
+
+    .content_empty {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div class="side_list">
+      <div class="item" v-for="(item, index) in allImageTypes" :class="{'active': activeIndex == index}"
+        :key="item.label" @click="changeConverter(index)">
+        <div class="item_logo">
+          <img :src="`./images/${item.icon}.png`" :alt="item.label">
+        </div>
+        <div class="item_desc" v-text="`转 ${item.label.toUpperCase()}`"></div>
+      </div>
+    </div>
+    <div class="content">
+      <!-- <div class="content_empty"
+        v-if="!convertList.hasOwnProperty(currentType) || (convertList[currentType].length < 1)">
+        <span>拖拽图片</span>
+      </div> -->
+      <div class="operation_panel"></div>
+    </div>
+  </div>
+</body>
+<script src="./js/vue.js"></script>
+<script>
+  // https://www.iconfont.cn/collections/detail?spm=a313x.7781069.0.da5a778a4&cid=12585
+  new Vue({
+    el: '#app',
+    data: {
+      allImageTypes: [
+        {
+          label: 'png',
+          value: 'image/png',
+          icon: 'png'
+        },
+        {
+          label: 'jpeg',
+          value: 'image/jpeg',
+          icon: 'jpeg'
+        },
+        {
+          label: 'jpg',
+          value: 'image/jpeg',
+          icon: 'jpg'
+        },
+        {
+          label: 'ico',
+          value: 'image/x-icon',
+          icon: 'common'
+        },
+        {
+          label: 'gif',
+          value: 'image/gif',
+          icon: 'gif'
+        },
+        {
+          label: 'webp',
+          value: 'image/webp',
+          icon: 'common'
+        },
+        {
+          label: 'bmp',
+          value: 'image/bmp',
+          icon: 'bmp'
+        },
+        {
+          label: 'pbm',
+          value: 'image/x-portable-bitmap',
+          icon: 'common'
+        },
+        {
+          label: 'pgm',
+          value: 'image/x-portable-graymap',
+          icon: 'common'
+        },
+        {
+          label: 'ppm',
+          value: 'image/x-portable-pixmap',
+          icon: 'common'
+        },
+        {
+          label: 'tif',
+          value: 'image/tiff',
+          icon: 'tif'
+        },
+        {
+          label: 'tiff',
+          value: 'image/tiff',
+          icon: 'common'
+        },
+        {
+          label: 'ras',
+          value: 'image/x-cmu-raster',
+          icon: 'common'
+        },
+        {
+          label: 'rgb',
+          value: 'image/x-rgb',
+          icon: 'common'
+        },
+        {
+          label: 'xwd',
+          value: 'image/x-xwindowdump',
+          icon: 'common'
+        },
+        {
+          label: 'xbm',
+          value: 'image/x-xbitmap',
+          icon: 'common'
+        }
+      ],
+      currentType: 'png',
+      activeIndex: 0,
+      convertList: {}
+    },
+    computed: {
+      renderTypes() {
+        return this.allImageTypes.filter(item => item.label.toUpperCase() != this.currentType.toUpperCase())
+      }
+    },
+    methods: {
+      changeConverter(index) {
+        if (Number(index) == this.activeIndex) return
+        this.activeIndex = Number(index)
+      }
+    }
+  })
+</script>
+
+</html>
