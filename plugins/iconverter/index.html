@@ -81,9 +81,178 @@
       position: relative;
       flex: 1;
       height: 100%;
-      overflow-x: hidden;
-      overflow-y: auto;
+      overflow: hidden;
       background-color: #f0f0f0;
+    }
+
+    .content_inner {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      padding: 10px 15px;
+      box-sizing: border-box;
+    }
+
+    .content_scroll {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .convert_item {
+      position: relative;
+      width: 100%;
+      height: 80px;
+      background-color: #fff;
+      border-radius: 5px;
+      overflow: hidden;
+      margin: 10px 0;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .convert_item_logo {
+      width: 80px;
+      height: 80px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .convert_item_logo_wrapper {
+      height: 64px;
+      width: 64px;
+      background-color: #f5f5f5;
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .convert_item_logo_wrapper img {
+      max-width: 48px;
+      max-height: 48px;
+    }
+
+    .convert_item_main {
+      flex: 1;
+      height: 100%;
+      padding: 0 10px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .convert_item_main_title {
+      width: 100%;
+      font-size: 15px;
+      color: #555;
+      white-space: pre-wrap;
+      word-break: break-all;
+      line-height: 1.2;
+      -webkit-line-clamp: 2;
+      display: -webkit-box;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+    }
+
+    .convert_item_main_subinfo {
+      width: 100%;
+      font-size: 14px;
+      color: #c8c8c8;
+      line-height: 2;
+    }
+
+    .convert_item_append {
+      width: 200px;
+      height: 100%;
+      padding-right: 15px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .show_in_folder {
+      height: 28px;
+      padding: 0 6px;
+      border-radius: 4px;
+      box-sizing: border-box;
+      cursor: pointer;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #fff;
+      transition: all .2s ease-in-out;
+    }
+
+    .show_in_folder:hover {
+      background-color: #f5f5f5;
+    }
+
+    .show_in_folder img {
+      width: 16px;
+      height: 16px;
+    }
+
+    .show_in_folder span {
+      font-size: 14px;
+      margin-left: 5px;
+      color: #333;
+    }
+
+    .convert_loading {
+      position: absolute;
+      z-index: 1;
+      width: 100%;
+      height: 2px;
+      left: 0;
+      bottom: 0;
+    }
+
+    .convert_loading_bar {
+      position: absolute;
+      z-index: 2;
+      left: 0;
+      top: 0;
+      width: 48%;
+      height: 100%;
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+      background-color: #007392;
+      transition: all .2s ease-in-out;
+    }
+
+    .convert_loading_bar.success {
+      background-color: #007392 !important;
+    }
+
+    .convert_loading_bar.fail {
+      background-color: #f33 !important;
+    }
+
+    .content_empty {
+      width: 100%;
+      height: 40px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      position: absolute;
+      color: #ababab;
+      top: 30px;
+      left: 0;
+      z-index: 1;
     }
 
     .operation_panel {
@@ -92,12 +261,12 @@
       width: 100%;
       height: 32px;
       left: 0;
-      top: 0;
+      bottom: 0;
       display: flex;
       flex-direction: row;
       align-items: center;
       justify-content: center;
-      transform: translate3d(0, -20px, 0);
+      transform: translate3d(0, 20px, 0);
       transition: all .2s ease-in-out;
     }
 
@@ -109,18 +278,18 @@
     .operation_add {
       width: 120px;
       height: 100%;
-      background-color: #f33;
+      background-color: #007392;
       color: #fff;
       font-weight: bold;
       font-size: 20px;
-      padding-bottom: 6px;
+      /* padding-bottom: 6px; */
       box-sizing: border-box;
       display: flex;
       flex-direction: row;
       align-items: center;
       justify-content: center;
-      border-bottom-left-radius: 10px;
-      border-bottom-right-radius: 10px;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
     }
   </style>
 </head>
@@ -137,8 +306,41 @@
       </div>
     </div>
     <div class="content">
+      <div class="content_inner">
+        <div class="content_scroll">
+          <div class="convert_item" v-for="(item, index) in renderList" :key="index"
+            :style="{backgroundColor: item.status == 1 ? 'rgba(0, 0, 0, 0.1)' : '#fff'}">
+            <div class="convert_item_logo">
+              <div class="convert_item_logo_wrapper">
+                <img :src="item.url" alt="">
+              </div>
+            </div>
+
+            <div class="convert_item_main">
+              <div class="convert_item_main_title" v-text="item.filename"></div>
+              <div class="convert_item_main_subinfo" v-text="item.size"></div>
+            </div>
+
+            <div class="convert_item_append">
+              <div class="show_in_folder">
+                <img src="./images/folder.png" alt="">
+                <span>显示</span>
+              </div>
+            </div>
+
+            <div class="convert_loading">
+              <div class="convert_loading_bar"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <transition name="fade">
+        <div class="content_empty" v-if="renderList.length < 1">暂无转换记录</div>
+      </transition>
+
       <div class="operation_panel">
-        <div class="operation_add">+</div>
+        <div class="operation_add" @click="chooseFile">+</div>
       </div>
     </div>
   </div>
@@ -146,7 +348,7 @@
 <script src="./js/vue.js"></script>
 <script>
   // https://www.iconfont.cn/collections/detail?spm=a313x.7781069.0.da5a778a4&cid=12585
-  new Vue({
+  window.app = new Vue({
     el: '#app',
     data: {
       allImageTypes: [
@@ -233,17 +435,89 @@
       ],
       currentType: 'png',
       activeIndex: 0,
-      convertList: {}
+      convertList: {},
+      filter: ''
     },
     computed: {
       renderTypes() {
         return this.allImageTypes.filter(item => item.label.toUpperCase() != this.currentType.toUpperCase())
+      },
+      renderList() {
+        if (this.activeIndex < 0) return []
+        let _activeType = this.allImageTypes[this.activeIndex]
+        if (!this.convertList.hasOwnProperty(_activeType.label)) {
+          return []
+        }
+        return this.convertList[_activeType.label]
       }
     },
+    created() {
+      this.convertList = this.allImageTypes.reduce((prev, curr) => {
+        if (!prev.hasOwnProperty(curr.label)) {
+          prev[curr.label] = []
+        }
+        return prev
+      }, {})
+      this.convertList['png'] = [{ "id": "16aefdd1fe99b460", "url": "/Users/liangshan/Downloads/icon.png", "status": 0, "size": "2.9 KB", "filename": "icon.png" }, { "id": "60332bec7addb713", "url": "/Users/liangshan/Downloads/logo.png", "status": 0, "size": "20.6 KB", "filename": "logo.png" }, { "id": "6f7463c91dcf45b9", "url": "/Users/liangshan/Downloads/sss.jpeg", "status": 0, "size": "5.3 KB", "filename": "sss.jpeg" }, { "id": "47ba47f369679a96", "url": "/Users/liangshan/Downloads/WechatIMG34.png", "status": 0, "size": "7.9 KB", "filename": "WechatIMG34.png" }, { "id": "0cbe8bc39b32156e", "url": "/Users/liangshan/Downloads/yjtp.png", "status": 0, "size": "4.7 KB", "filename": "yjtp.png" }]
+    },
+    mounted() {
+      bbtools.send('convert-image', {
+        url: '/Users/liangshan/Downloads/ffmpeg-output',
+        format: ['icns', 'ico']
+      })
+    },
     methods: {
+      __S4() {
+        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+      },
+      getUUID(prefix, format = "****") {
+        return (prefix || '') + format.replace(/(\*)/g, () => this.__S4())
+      },
+      sizeFormat(size) {
+        let out = ''
+        if (size > 1 * 1000 * 1000 * 1000) {
+          out = parseFloat(size / 1000 / 1000 / 1000).toFixed(1) + ' GB'
+        } else if (size > 1000 * 1000) {
+          out = parseFloat(size / 1000 / 1000).toFixed(1) + ' MB'
+        } else if (size > 1000) {
+          out = parseFloat(size / 1000).toFixed(1) + ' KB'
+        } else {
+          out = parseInt(size) + ' B'
+        }
+        return out
+      },
       changeConverter(index) {
         if (Number(index) == this.activeIndex) return
         this.activeIndex = Number(index)
+      },
+      chooseFile() {
+        let _choosenImages = bbtools.showOpenDialog({
+          title: '选择文件',
+          filters: [
+            {
+              name: 'Images',
+              extensions: this.allImageTypes.map(item => item.label)
+            }
+          ],
+          properties: ['openFile', 'multiSelections'],
+          message: '请选择图片'
+        })
+        if (!_choosenImages || !_choosenImages.length) return
+        let _activeType = this.allImageTypes[this.activeIndex]?.label
+        if (!this.convertList[_activeType]) {
+          this.convertList[_activeType] = []
+        }
+        this.$set(this.convertList, _activeType, _choosenImages.map(item => {
+          let _stat = bbtools.fs.statSync(item)
+          return {
+            id: this.getUUID(),
+            url: item,
+            status: 0,
+            size: this.sizeFormat(_stat.size),
+            filename: bbtools.path.basename(item)
+          }
+        }).concat(this.convertList[_activeType]))
+        console.log(JSON.stringify(this.convertList[_activeType]))
       }
     }
   })
