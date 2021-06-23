@@ -1,0 +1,26 @@
+{
+  "pluginName": "fm",
+  "version": "1.0.0",
+  "author": "BBTools",
+  "homepage": "https://bbt.dei2.com",
+  "logo": "logo.png",
+  "main": "index.html",
+  "description": "电台直播，电视直播，好友广播",
+  "features": {
+    "searchable": {
+      "cmds": [
+        "fm",
+        "电台直播",
+        "电视直播",
+        "好友广播"
+      ]
+    },
+    "filterable": true
+  },
+  "local": "/Users/liangshan/Downloads/workspace/dei2/bbtools-official-plugins/plugins/fm/dist/plugin.bbc",
+  "debug": {
+    "type": "file",
+    "path": ""
+  },
+  "id": "3pqUlHXwLL"
+}
