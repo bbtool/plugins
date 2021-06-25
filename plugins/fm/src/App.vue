@@ -38,5 +38,8 @@ body {
   .ivu-select-visible .ivu-select-selection {
     box-shadow: none !important;
   }
+  .ivu-select-input {
+    color: #fff !important;
+  }
 }
 </style>

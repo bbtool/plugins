@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home" :style="{ backgroundImage: `url('${bg}')` }">
     <div class="home_left">
       <side-menu
         :cities="cities"
@@ -23,6 +23,9 @@ export default {
   },
   data() {
     return {
+      // bg: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fattach.bbs.miui.com%2Fforum%2F201306%2F16%2F075301tf2288hbhxfbc42l.jpg&refer=http%3A%2F%2Fattach.bbs.miui.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1627210482&t=94919bb4fea0a8587a04fdd4b26b7796",
+      // bg: "https://ss0.baidu.com/7Po3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/c8ea15ce36d3d53919999d683e87e950342ab0f1.jpg",
+      bg: "http://image.xinli001.com/20150708/15593404fce2b128fa18f8.png",
       cities: [
         {
           name: "国家",
@@ -88,7 +91,7 @@ export default {
   flex-direction: row;
   align-items: flex-start;
   justify-content: space-between;
-  background-image: url("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fbenyouhuifile.it168.com%2Fforum%2Fday_100429%2F1004291840008539c8ac02cd5c.jpg&refer=http%3A%2F%2Fbenyouhuifile.it168.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1627204999&t=35b0cf303a84e87d64cd020aff1d4e57");
+  // background-image: url("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fatt2.citysbs.com%2Ftiaozao%2F2012%2F04%2F27%2F13%2F131226_kimdkooc_53eac39736c27a2ced374a1d88e96a02.jpg&refer=http%3A%2F%2Fatt2.citysbs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1627208927&t=d579db8525b1f5f97603ae2882ba9d4d");
   background-repeat: no-repeat;
   background-size: cover;
   &_left {

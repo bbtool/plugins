@@ -91,7 +91,7 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
-  border-right: 1px solid #f5f5f5;
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
   overflow-y: auto;
   &_header {
     position: sticky;
@@ -100,8 +100,8 @@ export default {
     z-index: 9;
     width: 100%;
     height: 36px;
-    background-color: #f8f8f8;
-    border-bottom: 1px solid #eee;
+    background-color: rgba(0, 0, 0, 0.9);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -121,10 +121,10 @@ export default {
       transition: all 0.2s ease-in-out;
       cursor: pointer;
       &:hover {
-        background-color: #f8f8f8;
+        background-color: rgba(0, 0, 0, 0.3);
       }
       &.active {
-        background-color: #c8c8c8 !important;
+        background-color: rgba(0, 0, 0, 0.9) !important;
         position: sticky;
         z-index: 9;
         top: 36px;
@@ -162,7 +162,7 @@ export default {
       &_name {
         width: calc(100% - 32px);
         font-size: 13px;
-        color: #333;
+        color: #fff;
         padding-left: 8px;
         box-sizing: border-box;
         line-height: 1.2;
