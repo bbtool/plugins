@@ -28,4 +28,15 @@ body {
 #app {
   height: 100%;
 }
+.clr {
+  .ivu-select {
+    .ivu-select-selection {
+      border: none !important;
+      background-color: transparent !important;
+    }
+  }
+  .ivu-select-visible .ivu-select-selection {
+    box-shadow: none !important;
+  }
+}
 </style>

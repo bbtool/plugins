@@ -1,23 +1,19 @@
 <template>
   <div class="main_content">
-    <keep-alive>
-      <component :is="currentPage"></component>
-    </keep-alive>
+    {{ JSON.stringify(activeFm, null, 2) }}
   </div>
 </template>
 
 <script>
 export default {
   name: "MainContent",
-  components: {
-    TabTelevision: () => import("./TabTelevision.vue"),
-    TabRadio: () => import("./TabRadio.vue"),
-    TabAnchor: () => import("./TabAnchor.vue"),
-  },
+  components: {},
   props: {
-    currentPage: {
-      type: String,
-      default: "TabTelevision",
+    activeFm: {
+      type: Object,
+      default() {
+        return {};
+      },
     },
   },
   data() {
