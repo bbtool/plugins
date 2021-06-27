@@ -1,38 +1,35 @@
 <template>
   <div class="side_menu">
     <div class="side_menu_header clr">
-      <Select
-        transfer
-        v-model="currentCity"
-        filterable
-        filter-by-label
-        @on-change="changeCity"
-      >
-        <Option
-          v-for="(item, index) in cities"
-          :key="item.id"
-          :value="item.id"
-          :label="item.name"
-        ></Option>
+      <Select transfer
+              v-model="currentCity"
+              filterable
+              filter-by-label
+              @on-change="changeCity">
+        <Option v-for="(item, index) in cities"
+                :key="item.id"
+                :value="item.id"
+                :label="item.name"></Option>
       </Select>
     </div>
     <div class="side_menu_scroller">
-      <div
-        class="fm_item"
-        v-for="(item, index) in fms"
-        :key="index"
-        :class="{ active: currentFmId == item.id }"
-        @click="changeFm(item)"
-      >
+      <div class="fm_item"
+           v-for="(item, index) in fms"
+           :key="index"
+           :class="{ active: activeIndex == index }"
+           @click="changeFm(item, index)">
         <div class="fm_item_logo">
-          <img :src="item.icon[0].url" :alt="item.name" />
+          <img :src="item.icon[0].url"
+               :alt="item.name" />
           <transition name="fade">
-            <div class="loading_wrapper" v-if="currentFmId == item.id">
+            <div class="loading_wrapper"
+                 v-if="activeIndex == index">
               <Loading></Loading>
             </div>
           </transition>
         </div>
-        <div class="fm_item_name" v-text="item.name"></div>
+        <div class="fm_item_name"
+             v-text="item.name"></div>
       </div>
     </div>
   </div>
@@ -50,7 +47,7 @@ export default {
   props: {
     cities: {
       type: Array,
-      default() {
+      default () {
         return [
           {
             name: "国家",
@@ -61,25 +58,41 @@ export default {
     },
     fms: {
       type: Array,
-      default() {
+      default () {
         return [];
       },
     },
+    activeIndex: {
+      type: Number,
+      default: 0
+    }
   },
-  data() {
+  data () {
     return {
       currentCity: "3225",
       currentFmId: "",
+      currentIndex: 0,
     };
   },
-  mounted() {},
+  watch: {
+    activeIndex: {
+      immediate: true,
+      handler (val) {
+        this.currentIndex = Number(val)
+      }
+    }
+  },
+  mounted () { },
   methods: {
-    changeFm(data) {
-      if (data.id == this.currentFmId) return;
+    changeFm (data, index) {
+      if (index == this.currentIndex) return;
       this.currentFmId = data.id;
-      this.$emit("change", data);
+      this.$emit("change", {
+        fm: data,
+        index: index
+      });
     },
-    changeCity(city) {
+    changeCity (city) {
       this.$emit("change-city", city);
     },
   },

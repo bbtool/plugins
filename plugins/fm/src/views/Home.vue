@@ -1,15 +1,19 @@
 <template>
-  <div class="home" :style="{ backgroundImage: `url('${bg}')` }">
+  <div class="home"
+       :style="{ backgroundImage: `url('${bg}')` }">
     <div class="home_left">
-      <side-menu
-        :cities="cities"
-        :fms="fms"
-        @change="changeFm"
-        @change-city="changeCity"
-      ></side-menu>
+      <side-menu :cities="cities"
+                 :fms="fms"
+                 :active-index="activeFmIndex"
+                 @change="changeFm"
+                 @change-city="changeCity"></side-menu>
     </div>
     <div class="home_main">
-      <MainContent :active-fm="activeFm"></MainContent>
+      <MainContent :active-fm="activeFm"
+                   :active-index="activeFmIndex"
+                   :fms="fms"
+                   @prev="setPrev"
+                   @next="setNext"></MainContent>
     </div>
   </div>
 </template>
@@ -21,11 +25,12 @@ export default {
     SideMenu: () => import("../components/SideMenu/index.vue"),
     MainContent: () => import("../components/MainContent/index.vue"),
   },
-  data() {
+  data () {
     return {
       // bg: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fattach.bbs.miui.com%2Fforum%2F201306%2F16%2F075301tf2288hbhxfbc42l.jpg&refer=http%3A%2F%2Fattach.bbs.miui.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1627210482&t=94919bb4fea0a8587a04fdd4b26b7796",
       // bg: "https://ss0.baidu.com/7Po3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/c8ea15ce36d3d53919999d683e87e950342ab0f1.jpg",
-      bg: "http://image.xinli001.com/20150708/15593404fce2b128fa18f8.png",
+      // bg: "http://image.xinli001.com/20150708/15593404fce2b128fa18f8.png",
+      bg: "http://attach.bbs.miui.com/forum/201107/18/1128552dfogdk5efkhzmoh.jpg",
       cities: [
         {
           name: "国家",
@@ -35,20 +40,21 @@ export default {
       currentCity: "3225",
       fms: [],
       activeFm: {},
+      activeFmIndex: -1
     };
   },
   watch: {
     currentCity: {
-      handler(val) {
+      handler (val) {
         this.initFms();
       },
     },
   },
-  mounted() {
+  mounted () {
     this.initFms();
   },
   methods: {
-    initFms() {
+    initFms () {
       let res = bbtools.sendSync("fm-live-play-list", {
         place: this.currentCity,
       });
@@ -69,15 +75,38 @@ export default {
         ];
         this.fms = res.data.top || [];
       }
-      console.log(">>>", this.fms);
     },
-    changeFm(data) {
-      this.activeFm = data;
-      console.log("play fm: ", data);
+    changeFm (params) {
+      this.activeFm = params.fm;
+      this.activeFmIndex = Number(params.index)
     },
-    changeCity(city) {
+    changeCity (city) {
       this.currentCity = city || "3225";
     },
+    setPrev () {
+      if (this.activeFmIndex == 0) return
+      let _activeFmIndex = Math.max(0, this.activeFmIndex - 1)
+      this.changeFm({
+        fm: this.fms[_activeFmIndex],
+        index: _activeFmIndex
+      })
+      console.log({
+        fm: this.fms[_activeFmIndex],
+        index: _activeFmIndex
+      })
+    },
+    setNext () {
+      if (this.activeFmIndex == (this.fms.length - 1)) return
+      let _activeFmIndex = Math.min(this.fms.length - 1, this.activeFmIndex + 1)
+      this.changeFm({
+        fm: this.fms[_activeFmIndex],
+        index: _activeFmIndex
+      })
+      console.log({
+        fm: this.fms[_activeFmIndex],
+        index: _activeFmIndex
+      })
+    }
   },
 };
 </script>

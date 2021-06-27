@@ -7,6 +7,9 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@videojs/http-streaming": "^1.11.2",
+    "video.js": "^7.12.3",
+    "videojs-flash": "^2.2.1",
     "core-js": "^3.6.5",
     "view-design": "^4.5.0",
     "vue": "^2.6.11",
