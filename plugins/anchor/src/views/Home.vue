@@ -21,13 +21,29 @@
             :width="500"
             placement="left"
             v-model="drawerModal.shown">
+      <Form :label-width="80"
+            class="custom_form">
+        <FormItem label="正在播放">
+          <Input :border="false"
+                 readonly
+                 :value="audioInfo.title ? audioInfo.title + ' - ' + audioInfo.artist : activeSource.url"></Input>
+        </FormItem>
 
+        <FormItem :label-width="0">
+          <Tabs value="name1">
+            <TabPane label="选择文件广播"
+                     name="name1">标签一的内容</TabPane>
+            <TabPane label="从摄像头广播"
+                     name="name2">标签二的内容</TabPane>
+          </Tabs>
+        </FormItem>
+      </Form>
     </Drawer>
   </div>
 </template>
 
 <script>
-import { Drawer } from "view-design";
+import { Drawer, Form, FormItem, Input, Tabs, TabPane } from "view-design";
 import videojs from "video.js";
 import "videojs-flash";
 // import '@videojs/http-streaming'
@@ -35,9 +51,9 @@ require("video.js/dist/video-js.min.css");
 export default {
   name: "Home",
   components: {
-    Drawer,
+    Drawer, Form, FormItem, Input, Tabs, TabPane,
   },
-  data() {
+  data () {
     return {
       bg: "http://attach.bbs.miui.com/forum/201107/18/1128552dfogdk5efkhzmoh.jpg",
       mimetypes: [{}],
@@ -56,22 +72,47 @@ export default {
         // url: 'http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8',
         // type: 'application/x-mpegURL'
       },
+      audioInfo: {
+        album: '',
+        artist: '',
+        title: ''
+      },
       drawerModal: {
         shown: false,
       },
     };
   },
-  mounted() {
+  watch: {
+    activeSource: {
+      immediate: true,
+      handler (val) {
+        if (!val.url) return
+        this.initAudioInfo()
+      }
+    }
+  },
+  mounted () {
     bbtools.setHeaderBg("#000");
 
     bbtools.on("filter-changed", this.filterChanged);
 
     this.initPlayer();
-
-    console.log("#########");
   },
   methods: {
-    filterChanged(event, data) {
+    initAudioInfo () {
+      let res = bbtools.sendSync('get-audio-info', {
+        url: this.activeSource.url
+      })
+      console.log('>>>>>', res)
+      if (res && res.status == 200) {
+        this.audioInfo = res?.data?.format?.tags || {
+          album: '',
+          artist: '',
+          title: ''
+        }
+      }
+    },
+    filterChanged (event, data) {
       console.log("####", data);
       this.activeSource = {
         url: data.filter,
@@ -79,7 +120,7 @@ export default {
       };
       this.initPlayer();
     },
-    addItem(opts) {
+    addItem (opts) {
       const that = this;
       let playlistEle = document.createElement("div");
       !playlistEle.classList.contains("video_control_item") &&
@@ -100,7 +141,7 @@ export default {
       let volumeEle = document.querySelector(".vjs-volume-panel");
       volumeEle.parentNode.insertBefore(playlistEle, volumeEle);
     },
-    addMusicBox(src) {
+    addMusicBox (src) {
       // vjs-tech
       const that = this;
       let playlistEle = document.createElement("div");
@@ -112,13 +153,13 @@ export default {
       let volumeEle = document.querySelector(".vjs-tech");
       volumeEle.parentNode.insertBefore(playlistEle, volumeEle);
     },
-    initPlayer() {
+    initPlayer () {
       this.player = videojs("my-player");
       if (this.player) {
         try {
           this.player.pause();
           this.player.dispose();
-        } catch (err) {}
+        } catch (err) { }
       }
 
       let videoBox = document.querySelector("#video_box");
@@ -141,7 +182,7 @@ export default {
       this.player = videojs(
         "my-player",
         this.playerOptions,
-        function onPlayerReady() {
+        function onPlayerReady () {
           document.querySelector(
             ".vjs-picture-in-picture-control"
           ).style.display = "none";
@@ -158,24 +199,24 @@ export default {
           that.addItem({
             title: "播放列表",
             icon: "",
-            onclick() {
+            onclick () {
               that.drawerModal.shown = true;
             },
           });
           this.play();
 
-          this.on("play", function () {});
+          this.on("play", function () { });
 
-          this.on("pause", function () {});
+          this.on("pause", function () { });
 
           // How about an event listener?
-          this.on("ended", function () {});
+          this.on("ended", function () { });
           this.on("error", function (err) {
             console.log("err: ", err.message);
           });
-          this.on("canplaythrough", function () {});
-          this.on("waiting", function () {});
-          this.on("loadstart", function () {});
+          this.on("canplaythrough", function () { });
+          this.on("waiting", function () { });
+          this.on("loadstart", function () { });
         }
       );
     },

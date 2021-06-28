@@ -75,4 +75,13 @@ body {
     opacity: 0.7;
   }
 }
+
+.custom_form {
+  .ivu-form-item-label {
+    color: #c8c8c8 !important;
+  }
+  .ivu-form-item {
+    margin-bottom: 0 !important;
+  }
+}
 </style>
