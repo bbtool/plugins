@@ -32,9 +32,13 @@
         <FormItem :label-width="0">
           <Tabs value="name1">
             <TabPane label="选择文件广播"
-                     name="name1">标签一的内容</TabPane>
+                     name="name1">
+              <FromFiles></FromFiles>
+            </TabPane>
             <TabPane label="从摄像头广播"
-                     name="name2">标签二的内容</TabPane>
+                     name="name2">
+              <FromCamera></FromCamera>
+            </TabPane>
           </Tabs>
         </FormItem>
       </Form>
@@ -52,6 +56,8 @@ export default {
   name: "Home",
   components: {
     Drawer, Form, FormItem, Input, Tabs, TabPane,
+    FromFiles: () => import('../components/FromFiles/index.vue'),
+    FromCamera: () => import('../components/FromCamera/index.vue'),
   },
   data () {
     return {
@@ -66,9 +72,19 @@ export default {
         "http://v.bootstrapmb.com/2019/4/lm8y53989",
         "http://v.bootstrapmb.com/2019/3/wxmoy3693",
       ],
+      playerOptions: {
+        errorDisplay: false,
+        techOrder: ['flash', 'html5'],
+        notSupportedMessage: '此视频暂无法播放，请稍后再试',
+        preload: 'auto',
+        language: 'zh-CN',
+        loop: true,
+      },
       activeSource: {
-        url: "https://static.dei2.com/resources/yfzm.flac",
-        type: "audio/flac",
+        url: "rtmp://10.2.3.30:1935/live/root_93712",
+        type: "rtmp/flv",
+        // url: "https://static.dei2.com/resources/yfzm.flac",
+        // type: "audio/flac",
         // url: 'http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8',
         // type: 'application/x-mpegURL'
       },
