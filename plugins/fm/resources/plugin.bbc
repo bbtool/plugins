@@ -17,7 +17,7 @@
     },
     "filterable": true
   },
-  "local": "/Users/liangshan/workspace/dei2/bbtools-official-plugins/plugins/fm/dist/plugin.bbc",
+  "local": "/Users/liangshan/Downloads/workspace/dei2/bbtools-official-plugins/plugins/fm/dist/plugin.bbc",
   "debug": {
     "type": "file",
     "path": ""
