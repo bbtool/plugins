@@ -1,17 +1,17 @@
 {
-  "pluginName": "image converter",
-  "version": "1.0.0",
+  "pluginName": "json",
+  "version": "1.0.1",
   "author": "BBTools",
   "homepage": "https://bbt.dei2.com",
   "logo": "logo.png",
   "main": "index.html",
-  "description": "图片格式转换器",
+  "description": "增强型json格式化，url参数解析",
   "features": {
     "searchable": {
       "cmds": [
-        "IConverter",
-        "图片转换器",
-        "图片格式转换器"
+        "json",
+        "json格式化",
+        "url参数解析"
       ]
     },
     "filterable": true
@@ -21,5 +21,5 @@
     "type": "file",
     "path": ""
   },
-  "id": "Nt8LfCkd3U"
+  "id": "uYbSDv4mrI"
 }
