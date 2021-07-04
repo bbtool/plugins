@@ -1,0 +1,27 @@
+{
+  "pluginName": "剪切板",
+  "version": "1.0.0",
+  "author": "BBTools",
+  "homepage": "https://bbt.dei2.com",
+  "logo": "logo.png",
+  "main": "index.html",
+  "description": "剪切板管理",
+  "features": {
+    "searchable": {
+      "cmds": [
+        "Clipboard",
+        "剪切板",
+        "剪贴板",
+        "剪切板管理",
+        "剪贴板管理"
+      ]
+    },
+    "filterable": true
+  },
+  "local": "/Users/liangshan/Downloads/workspace/dei2/bbtools-official-plugins/plugins/clipboard/dist/plugin.bbc",
+  "debug": {
+    "type": "file",
+    "path": ""
+  },
+  "id": "iJ-dhYmLf7"
+}
