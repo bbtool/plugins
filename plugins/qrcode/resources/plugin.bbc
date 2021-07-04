@@ -1,6 +1,6 @@
 {
   "pluginName": "二维码",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "BBTools",
   "homepage": "https://bbt.dei2.com",
   "logo": "logo.png",
@@ -13,7 +13,7 @@
         "二维码"
       ]
     },
-    "filterable": true
+    "filterable": false
   },
   "local": "/Users/liangshan/Downloads/workspace/dei2/bbtools-official-plugins/plugins/qrcode/dist/plugin.bbc",
   "debug": {
