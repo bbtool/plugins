@@ -1,0 +1,24 @@
+{
+  "pluginName": "二维码",
+  "version": "1.0.0",
+  "author": "BBTools",
+  "homepage": "https://bbt.dei2.com",
+  "logo": "logo.png",
+  "main": "index.html",
+  "description": "二维码工具，生成二维码，二维码解析",
+  "features": {
+    "searchable": {
+      "cmds": [
+        "qrcode",
+        "二维码"
+      ]
+    },
+    "filterable": true
+  },
+  "local": "/Users/liangshan/Downloads/workspace/dei2/bbtools-official-plugins/plugins/qrcode/dist/plugin.bbc",
+  "debug": {
+    "type": "file",
+    "path": ""
+  },
+  "id": "jVzCL7TqCq"
+}
