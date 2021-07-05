@@ -10,8 +10,10 @@
       </div>
       <div class="item_time"
            v-text="$timeFormat(item.time)"></div>
-      <div class="item_content"
-           v-html="item.content"></div>
+      <div class="item_content">
+        <pre style="user-select: text;"
+             v-html="item.content"></pre>
+      </div>
     </div>
   </div>
 </template>
@@ -27,7 +29,7 @@ export default {
   },
   data () {
     return {
-      currentIndex: 0,
+      currentIndex: -1,
       list: [
         {
           type: 'text',
@@ -37,12 +39,19 @@ export default {
         },
         {
           type: 'text',
-          content: 'PNG转ICO\n - \n在线转换图标文件',
+          content: '[\n  {\n    \"age\": 4,\n    \"name\": \"zs\"\n  },\n  {\n    \"age\": 4,\n    \"name\": \"ls\"\n  }\n]',
           time: 1625414626676,
           detail: {}
         },
-      ]
+      ],
+      db: null
     }
+  },
+  mounted () {
+
+  },
+  methods: {
+
   }
 }
 </script>
@@ -62,13 +71,18 @@ export default {
     border-bottom: 1px solid #f5f5f5;
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
     &.active {
-      border: 1px soild #f333;
+      border: 1px solid #f333;
+    }
+    &:hover {
+      background-color: #f5f5f5;
+      cursor: pointer;
     }
     &_index {
       width: 48px;
       height: 100%;
+      margin-top: 10px;
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -89,6 +103,7 @@ export default {
     &_time {
       font-size: 12px;
       color: #888;
+      margin-top: 16px;
       width: 64px;
       display: flex;
       flex-direction: row;
@@ -98,10 +113,11 @@ export default {
     &_content {
       flex: 1;
       height: 100%;
-      padding: 8px 15px;
+      // padding: 8px 15px;
       box-sizing: border-box;
-      font-size: 13px;
+      font-size: 14px;
       color: #666;
+      padding: 15px;
     }
   }
 }
